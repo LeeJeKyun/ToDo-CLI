@@ -7,7 +7,7 @@ import (
 )
 
 type Work struct {
-	Name  string
+	Todo  string
 	Clear bool
 }
 
@@ -18,32 +18,42 @@ func init() {
 	Works = JsonFileUnMarshal(todofile.Myfile)
 }
 
-func AppendWork(works *[]Work, name string) *[]Work {
-	w := *works
-	result := append(w, Work{name, false})
+func AppendWork(Todo string) *[]Work {
+	w := *Works
+	result := append(w, Work{Todo, false})
 	return &result
 }
 
-func ClearWork(works *[]Work, name string) *[]Work {
-	w := *works
+func ClearWork(Todo string) *[]Work {
+	w := *Works
 	for i, v := range w {
-		if v.Name == name {
+		if v.Todo == Todo {
 			w[i].Clear = true
 		}
 	}
 	return &w
 }
 
-func ListWork(works *[]Work) {
-	for i, n := range *works {
+func ListWork() {
+	for i, n := range *Works {
 		var ox string
 		if n.Clear {
-			ox = "O"
+			ox = "V"
 		} else {
-			ox = "X"
+			ox = " "
 		}
-		fmt.Println(i+1, "번째 할 일:", n.Name, "[", ox, "]")
+		fmt.Printf("%d). [%s] %s\n", i+1, ox, n.Todo)
 	}
+}
+
+func DeleteWork(Todo string) {
+	w := *Works
+	for i, v := range w {
+		if v.Todo == Todo {
+			w = RemoveIndex(w, i)
+		}
+	}
+	Works = &w
 }
 
 func JsonFileUnMarshal(file []byte) *[]Work {
@@ -56,4 +66,8 @@ func JsonFileUnMarshal(file []byte) *[]Work {
 		panic(unmarshalErr)
 	}
 	return &result
+}
+
+func RemoveIndex(s []Work, index int) []Work {
+	return append(s[:index], s[index+1:]...)
 }

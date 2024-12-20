@@ -9,28 +9,30 @@ import (
 )
 
 const (
-	ADD   = "add"
-	CLEAR = "clear"
-	LIST  = "ls"
+	ADD    = "add"
+	CLEAR  = "cl"
+	LIST   = "ls"
+	DELETE = "rm"
 )
 
 func main() {
-
 	//flag를 파싱한다.
-	action := flag.String("action", "123", "a String")
-	todoName := flag.String("work", "X", "a string")
+	//action := flag.String("action", "default", "a string")
+	todoName := flag.String("todo", "defaultTodo", "Something to do")
 	flag.Parse()
+	//fmt.Println(*todoName)
 
-	//fmt.Println("main - 1", *action)
-	//s := os.Args[len(os.Args)-1]
+	action := os.Args[len(os.Args)-1]
 	//action 플래그에 따라 다른 다른 행동을 한다.
-	switch *action {
+	switch action {
 	case ADD:
-		work.Works = work.AppendWork(work.Works, *todoName)
+		work.Works = work.AppendWork(*todoName)
 	case CLEAR:
-		work.Works = work.ClearWork(work.Works, *todoName)
+		work.Works = work.ClearWork(*todoName)
 	case LIST:
-		work.ListWork(work.Works)
+		work.ListWork()
+	case DELETE:
+		work.DeleteWork(*todoName)
 	}
 
 	marshal, err := json.Marshal(*work.Works)
